@@ -1,0 +1,78 @@
+options {
+    directory "/var/named";
+    pid-file "/run/named/named.pid";
+
+
+    auth-nxdomain yes;
+    datasize default;
+    empty-zones-enable no;
+    tkey-gssapi-keytab "/var/lib/samba/private/dns.keytab";
+    forwarders { 8.8.8.8; 8.8.4.4; };
+
+    //  Add any subnets or hosts you want to allow to use this DNS server (use "; " delimiter)
+    allow-query     { 192.168.0.0/24; 127.0.0.0/8; };
+
+    //  Add any subnets or hosts you want to allow to use recursive queries
+    allow-recursion { 192.168.0.0/24; 127.0.0.0/8; };
+
+    //  Add any subnets or hosts you want to allow dynamic updates from
+    allow-update    { none; };
+
+    allow-transfer { none; };
+    version none;
+    hostname none;
+    server-id none;
+};
+
+zone "localhost" IN {
+    type master;
+    file "localhost.zone";
+};
+
+
+zone "tnt.int" IN {
+    type master;
+    file "tnt.int.zone";
+};
+
+
+zone "0.0.127.in-addr.arpa" IN {
+    type master;
+    file "127.0.0.zone";
+};
+
+zone "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa" {
+    type master;
+    file "localhost.ip6.zone";
+};
+
+zone "255.in-addr.arpa" IN {
+    type master;
+    file "empty.zone";
+};
+
+zone "0.in-addr.arpa" IN {
+    type master;
+    file "empty0.zone";
+};
+
+zone "." IN {
+    type hint;
+    file "root.hint";
+};
+
+//Load AD integrated zones
+//dlz "AD DNS Zones" {
+//    database "dlopen /usr/lib/samba/bind9/dlz_bind9_10.so";
+//};
+
+//zone "example.org" IN {
+//    type slave;
+//    file "example.zone";
+//    masters {
+//        192.168.1.100;
+//    };
+//    allow-query { any; };
+//    allow-transfer { any; };
+//};
+

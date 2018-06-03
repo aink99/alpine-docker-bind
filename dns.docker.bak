@@ -1,0 +1,8 @@
+FROM alpine
+RUN apk update && apk add  bind bind-tools bind-libs bind-doc \
+&& cp /etc/bind/named.conf.recursive /etc/bind/named.conf \
+&& sed -i s'|listen-on { 127.0.0.1; };| //listen-on { 127.0.0.1; }; |g' /etc/bind/named.conf \
+&& sed -i 's|127.0.0.1/32;|127.0.0.1/32;172.17.0.1/32;|' /etc/bind/named.conf
+#RUN ln -sf /dev/stdout /var/log/apache2/access.log
+#RUN ln -sf /dev/stderr /var/log/apache2/error.log
+CMD    /usr/sbin/named -u named -g
